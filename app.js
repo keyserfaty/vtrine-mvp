@@ -54,10 +54,12 @@ const store = createStore(reducer)
 // View
 const d = document
 
-function Image (src) {
+function Image (attrs) {
   const img = d.createElement('img')
-  img.setAttribute('src', src)
-  img.setAttribute('style', 'width: 100%')
+  Object.keys(attrs).forEach(function (key) {
+    img.setAttribute(key, attrs[key])
+  })
+
   return img
 }
 
@@ -68,19 +70,45 @@ store.subscribe(function (state, action) {
     case 'ON_NEW_IMAGES': {
       const list = state.list
       const id = state.currentImage
+      const nextId = state.nextImage
 
-      const nextImage = Image(list[id].urls.small)
+      const currentImage = Image({
+        id: id,
+        src: list[id].urls.small,
+        style: 'width: 100%'
+      })
+
+      const nextImage = Image({
+        id: nextId,
+        src: list[nextId].urls.small,
+        style: 'width: 100%; display: none'
+      })
+
+      root.appendChild(currentImage)
       root.appendChild(nextImage)
+      break
     }
 
     case 'ON_SPACE_BAR': {
-      const list = state.list
-      const id = state.nextImage
-
-      const prevImage = root.querySelector('img')
-      prevImage.setAttribute('src', list[id].urls.small)
-
       store.dispatch({ type: 'ON_NEXT_IMAGE' })
+
+      const list = state.list
+      const nextId = state.nextImage
+
+      const images = root.querySelectorAll('img')
+      const prevImage = images[0]
+      const currentImage = images[1]
+      const nextImage = Image({
+        id: nextId,
+        src: list[nextId].urls.small,
+        style: 'width: 100%; display: none'
+      })
+
+      root.removeChild(prevImage)
+      currentImage.setAttribute('style', 'width: 100%;')
+      root.appendChild(nextImage)
+
+      break
     }
   }
 })
