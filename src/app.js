@@ -1,16 +1,16 @@
 // Constants
-const d = document
-const url = 'https://api.unsplash.com/photos/?client_id='
-const clientId = '6322e07de0e155ba0d9eca8d67cf27bb9b45417f2feb1a234baa363a1dda3dbe'
+var d = document
+var url = 'https://api.unsplash.com/photos/?client_id='
+var clientId = '6322e07de0e155ba0d9eca8d67cf27bb9b45417f2feb1a234baa363a1dda3dbe'
 
 // Model
-const initialState = {
+var initialState = {
   list: [],
   currentImage: 0,
   nextImage: 1
 }
 
-const createStore = function createStoreFn (reducer) {
+var createStore = function createStoreFn (reducer) {
   var state = undefined
   var subscribers = []
 
@@ -30,7 +30,7 @@ const createStore = function createStoreFn (reducer) {
   }
 }
 
-const reducer = function reducerFn (state, action) {
+var reducer = function reducerFn (state, action) {
   if (typeof state === 'undefined') {
     state = initialState
   }
@@ -54,11 +54,11 @@ const reducer = function reducerFn (state, action) {
   }
 }
 
-const store = createStore(reducer)
+var store = createStore(reducer)
 
 // View
 function Node (elem, attrs) {
-  const node = d.createElement(elem)
+  var node = d.createElement(elem)
   Object.keys(attrs).forEach(function (key) {
     node.setAttribute(key, attrs[key])
   })
@@ -67,16 +67,16 @@ function Node (elem, attrs) {
 }
 
 store.subscribe(function (state, action) {
-  const root = d.querySelector('#root')
+  var root = d.querySelector('#root')
 
-  const list = state.list
-  const id = state.currentImage
-  const nextId = state.nextImage
+  var list = state.list
+  var id = state.currentImage
+  var nextId = state.nextImage
 
   switch (action.type) {
     case 'ON_WINDOW_LOAD':
     case 'ON_FETCH_IMAGES': {
-      const xml = new XMLHttpRequest();
+      var xml = new XMLHttpRequest();
 
       xml.addEventListener('load', function () {
           store.dispatch({
@@ -94,18 +94,18 @@ store.subscribe(function (state, action) {
     }
 
     case 'ON_NEW_IMAGES': {
-      const images = d.querySelectorAll('img')
+      var images = d.querySelectorAll('img')
       images.forEach(function (image) {
         root.removeChild(image)
       })
 
-      const currentImage = Node('img', {
+      var currentImage = Node('img', {
         id: id,
         src: list[id].urls.small,
         style: 'width: 100%'
       })
 
-      const nextImage = Node('img', {
+      var nextImage = Node('img', {
         id: nextId,
         src: list[nextId].urls.small,
         style: 'width: 100%; display: none'
@@ -126,10 +126,10 @@ store.subscribe(function (state, action) {
         })
       }
 
-      const images = root.querySelectorAll('img')
-      const prevImage = images[0]
-      const currentImage = images[1]
-      const nextImage = Node('img', {
+      var images = root.querySelectorAll('img')
+      var prevImage = images[0]
+      var currentImage = images[1]
+      var nextImage = Node('img', {
         id: nextId,
         src: list[nextId].urls.small,
         style: 'width: 100%; display: none'
@@ -145,7 +145,7 @@ store.subscribe(function (state, action) {
 })
 
 // Events
-const body = d.querySelector('body')
+var body = d.querySelector('body')
 
 window.addEventListener('load', function () {
   store.dispatch({
